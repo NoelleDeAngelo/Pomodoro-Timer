@@ -9,17 +9,28 @@
   color:aliceblue;
 }
 
-.button{
-  width:80%;
-  height:50px;
+.startstopbutton{
+  align-self: stretch;
   color: aliceblue;
   font-size: 2rem;
+  height:50px;
+}
+.updowncontiner{
+  display: flex;
+  width:100%;
+  justify-content: space-evenly;
+}
+
+.updown{
+  font-size: 1.3rem;
 }
 
 .start{
-background-color:rgb(98, 178, 98);
+  background-color:rgb(98, 178, 98);
+
 }
 
 .stop{
   background-color: red;
+
 }
