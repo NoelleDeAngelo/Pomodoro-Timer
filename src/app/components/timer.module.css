@@ -1,0 +1,25 @@
+.main{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.time{
+  font-size: 8rem;
+  color:aliceblue;
+}
+
+.button{
+  width:80%;
+  height:50px;
+  color: aliceblue;
+  font-size: 2rem;
+}
+
+.start{
+background-color:rgb(98, 178, 98);
+}
+
+.stop{
+  background-color: red;
+}
