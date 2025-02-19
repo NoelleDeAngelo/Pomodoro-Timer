@@ -26,7 +26,6 @@ export default function Home() {
   }
 
   const changeInterval = function () {
-    console.log("this is current int "+ currentInterval)
     if (currentInterval === "pom") {
       if (roundsCount > 3) {
         setCurrentInterval("long")

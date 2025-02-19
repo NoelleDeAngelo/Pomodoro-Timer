@@ -22,12 +22,11 @@ export default function Timer({time, changeInterval}) {
   useEffect(() => {
     if (timeInSec <= 0) {
       changeInterval()
-      console.log("this changed")
     }
   }, [timeInSec])
 
 
-    useEffect(() => {
+  useEffect(() => {
       setTimeInSec(time*60)
     }, [time]);
 
@@ -63,6 +62,22 @@ export default function Timer({time, changeInterval}) {
           onClick={() => setIsCounting((isCounting) => !isCounting)}
         >
           {isCounting ? "Stop" : "Start"}
+        </button>
+        <button
+          className={styles.startstopbutton}
+          onClick={() => {
+            setTimeInSec(time * 60);
+          }}
+        >
+          Restart Interval
+        </button>
+        <button
+          className={styles.startstopbutton}
+          onClick={() => {
+            changeInterval();
+          }}
+        >
+          Next Interval
         </button>
       </div>
     </>
