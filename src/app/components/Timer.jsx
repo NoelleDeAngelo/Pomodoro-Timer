@@ -3,19 +3,33 @@ import styles from "./timer.module.css";
 import { useState, useEffect } from "react";
 
 
-export default function Timer() {
+export default function Timer({time, changeInterval}) {
 
-  const [timeInSec, setTimeInSec] = useState(300)
+  const [timeInSec, setTimeInSec] = useState(time*60)
   const[isCounting, setIsCounting]= useState(false)
 
   useEffect(() => {
     const intervalID = setInterval(() => {
       if (isCounting) {
         setTimeInSec((timeInSec) => timeInSec - 1);
+      } else {
+        clearInterval(intervalID);
       }
     }, 1000);
     return () => clearInterval(intervalID);
   }, [isCounting]);
+
+  useEffect(() => {
+    if (timeInSec <= 0) {
+      changeInterval()
+      console.log("this changed")
+    }
+  }, [timeInSec])
+
+
+    useEffect(() => {
+      setTimeInSec(time*60)
+    }, [time]);
 
   const convertToMin = function (sec) {
     let min = Math.floor(sec / 60)
