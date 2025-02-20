@@ -44,6 +44,11 @@ export default function Home() {
     }
   }
 
+  const reset = () => {
+    setCurrentInterval("pom")
+    setCurrentIntervalLength(pomTime)
+    setRoundsCount(0)
+  }
 
   const generateDots = () => {
     let count = roundsCount
@@ -76,6 +81,7 @@ export default function Home() {
           className={styles.timer}
           time={currentIntervalLength}
           changeInterval={changeInterval}
+          reset={reset}
         />
       </main>
       <footer className={styles.footer}></footer>

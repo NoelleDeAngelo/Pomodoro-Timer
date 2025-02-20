@@ -3,7 +3,7 @@ import styles from "./timer.module.css";
 import { useState, useEffect } from "react";
 
 
-export default function Timer({time, changeInterval}) {
+export default function Timer({time, changeInterval, reset}) {
 
   const [timeInSec, setTimeInSec] = useState(time*60)
   const[isCounting, setIsCounting]= useState(false)
@@ -78,6 +78,15 @@ export default function Timer({time, changeInterval}) {
           }}
         >
           Next Interval
+        </button>
+        <button
+          className={styles.startstopbutton}
+          onClick={() => {
+            reset();
+            setTimeInSec(time*60)
+          }}
+        >
+          Reset
         </button>
       </div>
     </>
