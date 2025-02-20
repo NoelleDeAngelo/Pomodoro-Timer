@@ -4,6 +4,7 @@ import styles from "./page.module.css";
 import Timer from "./components/Timer"
 import IntervalSelector from "./components/IntervalSelector"
 import { useState } from "react";
+import { VscCircle, VscCircleFilled } from "react-icons/vsc";
 
 
 export default function Home() {
@@ -15,7 +16,7 @@ export default function Home() {
   const [currentIntervalLength, setCurrentIntervalLength] = useState(pomTime)
   const [roundsCount, setRoundsCount]=useState(0)
 
-  const changeTime = function (interval,amount) {
+  const changeTime =  (interval,amount)=> {
     if (interval === "pom") {
       setPomTime((pomTime) => pomTime + amount)
     }else if (interval==="short"){
@@ -25,7 +26,8 @@ export default function Home() {
     }
   }
 
-  const changeInterval = function () {
+
+  const changeInterval = ()=> {
     if (currentInterval === "pom") {
       if (roundsCount > 3) {
         setCurrentInterval("long")
@@ -42,14 +44,41 @@ export default function Home() {
     }
   }
 
+
+  const generateDots = () => {
+    let count = roundsCount
+    let dots=[]
+    for (var i = 0; i < 4; i++){
+      if (count > 0) {
+        dots.push(<VscCircleFilled />);
+        count--
+      } else {
+        dots.push(<VscCircle />);
+      }
+    }
+    return dots
+  }
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <IntervalSelector changeTime={changeTime} pomTimeSet={pomTime} shortTimeSet={shortTime} longTimeSet={ longTime} />
-        <Timer className={styles.timer} time={currentIntervalLength} changeInterval={changeInterval} />
+        <IntervalSelector
+          changeTime={changeTime}
+          pomTimeSet={pomTime}
+          shortTimeSet={shortTime}
+          longTimeSet={longTime}
+        />
+        <div>{generateDots().map((dot,i) => (
+          <span key={i}>{ dot}</span>
+        ))}</div>
+
+        <Timer
+          className={styles.timer}
+          time={currentIntervalLength}
+          changeInterval={changeInterval}
+        />
       </main>
-      <footer className= {styles.footer}>
-      </footer>
+      <footer className={styles.footer}></footer>
     </div>
   );
 }

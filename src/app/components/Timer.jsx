@@ -61,7 +61,7 @@ export default function Timer({time, changeInterval}) {
           }`}
           onClick={() => setIsCounting((isCounting) => !isCounting)}
         >
-          {isCounting ? "Stop" : "Start"}
+          {isCounting ? "Pause" : "Start"}
         </button>
         <button
           className={styles.startstopbutton}
