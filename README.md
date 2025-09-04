@@ -2,7 +2,7 @@
 
 A customizable Pomodoro timer built with Next.js and deployed on Vercel. This is a work in progress, created to give more control over focus sessions by allowing users to adjust times and manage intervals on the fly.
 
-Live Demo: [Vercel App](pomodoro-timer-six-hazel.vercel.app)
+Live Demo: [Vercel App](https://pomodoro-timer-six-hazel.vercel.app/)
 
 
 ## Features
