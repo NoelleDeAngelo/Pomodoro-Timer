@@ -3,7 +3,7 @@ import styles from "./timer.module.css";
 import { useState, useEffect } from "react";
 
 
-export default function Timer({time, changeInterval, reset}) {
+export default function Timer({time, changeInterval, reset, warnTime, playSound}) {
 
   const [timeInSec, setTimeInSec] = useState(time*60)
   const[isCounting, setIsCounting]= useState(false)
@@ -22,6 +22,8 @@ export default function Timer({time, changeInterval, reset}) {
   useEffect(() => {
     if (timeInSec <= 0) {
       changeInterval()
+    } else if (timeInSec===warnTime) {
+      playSound("warn")
     }
   }, [timeInSec])
 
@@ -83,7 +85,7 @@ export default function Timer({time, changeInterval, reset}) {
           className={styles.startstopbutton}
           onClick={() => {
             reset();
-            setTimeInSec(time*60)
+            setTimeInSec(time * 60);
           }}
         >
           Reset

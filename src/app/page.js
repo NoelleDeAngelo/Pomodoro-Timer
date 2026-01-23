@@ -3,14 +3,14 @@
 import styles from "./page.module.css";
 import Timer from "./components/Timer"
 import IntervalSelector from "./components/IntervalSelector"
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { VscCircle, VscCircleFilled } from "react-icons/vsc";
 import { HiMiniSpeakerWave, HiMiniSpeakerXMark } from "react-icons/hi2";
 
 
 
 export default function Home() {
-
+  const [warnTime, setWarnTime] = useState(0);
   const [pomTime, setPomTime] = useState(20)
   const [shortTime, setShortTime] = useState(5);
   const [longTime, setLongTime] = useState(15);
@@ -18,25 +18,44 @@ export default function Home() {
   const [currentIntervalLength, setCurrentIntervalLength] = useState(pomTime)
   const [roundsCount, setRoundsCount] = useState(0)
   const [soundOn,setSoundOn]=useState(true)
-  const audioRef= useRef()
+  const endAudioRef = useRef()
+  const warnAudioRef= useRef()
 
+    useEffect(() => {
+      if (endAudioRef.current) {
+        endAudioRef.current.volume = 0.05;
+      }
+      if (warnAudioRef.current) {
+        warnAudioRef.current.volume=1
+      }
+    }, []);
 
-  const changeTime =  (interval,amount)=> {
+  const changeTime = (interval, amount) => {
     if (interval === "pom") {
       setPomTime((pomTime) => pomTime + amount)
-    }else if (interval==="short"){
-        setShortTime((shortTime)=>shortTime+amount)
+    } else if (interval === "short") {
+      setShortTime((shortTime) => shortTime + amount)
     } else if (interval === "long") {
-      setLongTime((longTime)=>longTime+amount)
+      setLongTime((longTime) => longTime + amount)
+    } else if (interval === "warn") {
+      setWarnTime((warnTime)=>warnTime+ amount)
     }
   }
 
-
-  const changeInterval = () => {
+  const playSound = (type) => {
+    if (type === "end") {
+      var audioRef=endAudioRef
+    } else if (type === "warn") {
+      var audioRef= warnAudioRef
+    }
     if (soundOn) {
       audioRef.current.volume=0.1
       audioRef.current.play()
     }
+  }
+
+  const changeInterval = () => {
+    playSound("end")
     if (currentInterval === "pom") {
       if (roundsCount > 3) {
         setCurrentInterval("long")
@@ -92,18 +111,22 @@ export default function Home() {
           pomTimeSet={pomTime}
           shortTimeSet={shortTime}
           longTimeSet={longTime}
+          warnTimeSet={warnTime}
         />
         <div>
           {generateDots().map((dot, i) => (
             <span key={i}>{dot}</span>
           ))}
         </div>
-        <audio ref={audioRef} id="timeUp" src="/chime.mp3"></audio>
+        <audio ref={endAudioRef} id="timeUp" src="/chime.mp3"></audio>
+        <audio ref={warnAudioRef} id="warnTime" src="/chime-warntime.mp3"></audio>
         <Timer
           className={styles.timer}
           time={currentIntervalLength}
           changeInterval={changeInterval}
           reset={reset}
+          playSound={playSound}
+          warnTime={warnTime * 60}
         />
       </main>
       <footer className={styles.footer}></footer>
