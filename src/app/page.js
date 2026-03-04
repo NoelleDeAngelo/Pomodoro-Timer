@@ -10,6 +10,7 @@ import { HiMiniSpeakerWave, HiMiniSpeakerXMark } from "react-icons/hi2";
 
 
 export default function Home() {
+  const [timerKey, setTimerKey]= useState(0)
   const [warnTime, setWarnTime] = useState(0);
   const [pomTime, setPomTime] = useState(20)
   const [shortTime, setShortTime] = useState(5);
@@ -76,6 +77,7 @@ export default function Home() {
     setCurrentInterval("pom")
     setCurrentIntervalLength(pomTime)
     setRoundsCount(0)
+    setTimerKey((prev) => prev + 1);
   }
 
   const generateDots = () => {
@@ -121,12 +123,13 @@ export default function Home() {
         <audio ref={endAudioRef} id="timeUp" src="/chime.mp3"></audio>
         <audio ref={warnAudioRef} id="warnTime" src="/chime-warntime.mp3"></audio>
         <Timer
+          key={timerKey}
           className={styles.timer}
           time={currentIntervalLength}
           changeInterval={changeInterval}
           reset={reset}
           playSound={playSound}
-          warnTime={warnTime * 60}
+          warnTime={warnTime * 60* 1000}
         />
       </main>
       <footer className={styles.footer}></footer>
