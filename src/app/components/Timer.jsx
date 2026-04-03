@@ -1,38 +1,48 @@
 "use client"
 import styles from "./timer.module.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 
 export default function Timer({time, changeInterval, reset, warnTime, playSound}) {
 
-  const [timeInSec, setTimeInSec] = useState(time*60)
-  const[isCounting, setIsCounting]= useState(false)
+  const [timeRemainingInMS, setTimeRemainingInMS] = useState(time*60*1000)
+  const [isCounting, setIsCounting] = useState(false)
+
+  const endTime = useRef(Date.now() + timeRemainingInMS + 1000);
+  const warnPlayed= useRef(false)
 
   useEffect(() => {
+    if (isCounting) {
+      endTime.current= (Date.now() + timeRemainingInMS);
+    }
     const intervalID = setInterval(() => {
       if (isCounting) {
-        setTimeInSec((timeInSec) => timeInSec - 1);
+        setTimeRemainingInMS(endTime.current - Date.now())
       } else {
         clearInterval(intervalID);
       }
-    }, 1000);
+    }, 250);
     return () => clearInterval(intervalID);
   }, [isCounting]);
 
   useEffect(() => {
-    if (timeInSec <= 0) {
+    if (timeRemainingInMS <= 0) {
       changeInterval()
-    } else if (timeInSec===warnTime) {
+    } else if (timeRemainingInMS <= warnTime && warnPlayed.current === false) {
+      warnPlayed.current= true
       playSound("warn")
     }
-  }, [timeInSec])
+  }, [timeRemainingInMS])
 
 
   useEffect(() => {
-      setTimeInSec(time*60)
+    setTimeRemainingInMS(time * 60 * 1000);
+    endTime.current = Date.now() + time * 60 * 1000 + 1000;
+    warnPlayed.current = false;
     }, [time]);
 
-  const convertToMin = function (sec) {
+  const convertToMin = function (ms) {
+    let sec= Math.floor(ms /1000)
     let min = Math.floor(sec / 60)
     let seconds = sec % 60
     seconds<10 ? seconds="0"+seconds: seconds=seconds
@@ -40,8 +50,13 @@ export default function Timer({time, changeInterval, reset, warnTime, playSound}
   }
 
   const changeTime = function (amountInMin) {
-    let seconds = amountInMin * 60
-    setTimeInSec((timeInSec)=>timeInSec+seconds)
+    let ms = amountInMin * 60* 1000
+    setTimeRemainingInMS((prev) => {
+      const newTimeRemaining = prev + ms
+      endTime.current = Date.now() + newTimeRemaining
+      return newTimeRemaining
+    });
+
   }
 
   return (
@@ -56,7 +71,7 @@ export default function Timer({time, changeInterval, reset, warnTime, playSound}
           </button>
         </div>
 
-        <h1 className={styles.time}>{convertToMin(timeInSec)}</h1>
+        <h1 className={styles.time}>{convertToMin(timeRemainingInMS)}</h1>
         <button
           className={`${isCounting ? styles.stop : styles.start} ${
             styles.startstopbutton
@@ -68,7 +83,8 @@ export default function Timer({time, changeInterval, reset, warnTime, playSound}
         <button
           className={styles.startstopbutton}
           onClick={() => {
-            setTimeInSec(time * 60);
+            setTimeRemainingInMS(time * 60 * 1000);
+            endTime.current = Date.now() + (time * 60 * 1000) + 1000;
           }}
         >
           Restart Interval
@@ -85,7 +101,6 @@ export default function Timer({time, changeInterval, reset, warnTime, playSound}
           className={styles.startstopbutton}
           onClick={() => {
             reset();
-            setTimeInSec(time * 60);
           }}
         >
           Reset
